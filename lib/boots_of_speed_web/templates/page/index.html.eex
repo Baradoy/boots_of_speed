@@ -1,2 +1,2 @@
 <div id="messages"></div>
-<input id="chat-input" type="text" />
+<div id="app"></div>

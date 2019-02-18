@@ -10,8 +10,16 @@ import css from "../css/app.css";
 // Import dependencies
 //
 import "phoenix_html";
+import Vue from "vue";
+import App from "./App";
+import router from "./router";
 
-// Import local files
-//
-// Local files can be imported directly using relative paths, for example:
-import socket from "./socket";
+Vue.config.productionTip = false;
+
+/* eslint-disable no-new */
+new Vue({
+  el: "#app",
+  router,
+  components: { App },
+  template: "<App/>"
+});

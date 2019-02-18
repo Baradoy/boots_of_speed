@@ -9,9 +9,10 @@ defmodule BootsOfSpeed.Application do
     # List all child processes to be supervised
     children = [
       # Start the endpoint when the application starts
-      BootsOfSpeedWeb.Endpoint
+      BootsOfSpeedWeb.Endpoint,
       # Starts a worker by calling: BootsOfSpeed.Worker.start_link(arg)
       # {BootsOfSpeed.Worker, arg},
+      BootsOfSpeed.GameState
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
