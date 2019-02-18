@@ -1,12 +1,12 @@
 <template>
-  <div v-on:click="$emit('select', { characterName: name, image })">
+  <div v-on:click="$emit('select', { characterName: name, image, type})">
     <img :src="image" :alt="name">
   </div>
 </template>
 
 <script>
 export default {
-  props: ["image", "name"]
+  props: ["image", "name", "type"]
 };
 </script>
 

@@ -35,13 +35,8 @@ defmodule BootsOfSpeed.GameState do
 
   # Character Management
   @spec add_character(any(), any()) :: any()
-  def add_character(game_name, character_name) do
-    GenServer.call(__MODULE__, {:add_character, game_name, character_name, "character"})
-  end
-
-  @spec add_monster(any(), any()) :: any()
-  def add_monster(game_name, character_name) do
-    GenServer.call(__MODULE__, {:add_character, game_name, character_name, "monster"})
+  def add_character(game_name, %{character_name: character_name, image: image, type: type}) do
+    GenServer.call(__MODULE__, {:add_character, game_name, character_name, image, type})
   end
 
   def remove_character(game_name, character_name) do
@@ -77,7 +72,11 @@ defmodule BootsOfSpeed.GameState do
     {:reply, state, state}
   end
 
-  def handle_call({:add_character, game_name, character_name, character_type}, _from, state) do
+  def handle_call(
+        {:add_character, game_name, character_name, image, character_type},
+        _from,
+        state
+      ) do
     state =
       update_in(state, [game_name, :characters], fn
         %{^character_name => _} = characters ->
@@ -85,6 +84,7 @@ defmodule BootsOfSpeed.GameState do
 
         characters ->
           Map.put(characters, character_name, %{
+            image: image,
             type: character_type,
             color: random_character_color()
           })

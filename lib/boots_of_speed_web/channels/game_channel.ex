@@ -35,10 +35,16 @@ defmodule BootsOfSpeedWeb.GameChannel do
 
   def handle_in(
         "add_character",
-        %{"body" => %{"characterName" => character_name}},
+        %{"body" => %{"characterName" => character_name, "image" => image, "type" => type}},
         %{topic: "game:" <> game_name} = socket
       ) do
-    game = BootsOfSpeed.GameState.add_character(game_name, character_name)
+    game =
+      BootsOfSpeed.GameState.add_character(game_name, %{
+        character_name: character_name,
+        image: image,
+        type: type
+      })
+
     broadcast!(socket, "state", %{body: game})
     {:noreply, socket}
   end
@@ -62,6 +68,10 @@ defmodule BootsOfSpeedWeb.GameChannel do
   def handle_in("remove_game", %{"body" => body}, socket) do
     state = BootsOfSpeed.GameState.remove_game(body)
     broadcast!(socket, "state", %{body: state})
+    {:noreply, socket}
+  end
+
+  def handle_in(_, _, socket) do
     {:noreply, socket}
   end
 end

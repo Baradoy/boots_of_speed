@@ -4,21 +4,25 @@
       v-for="character in characters"
       v-bind:key="character.name"
       v-bind:name="character.name"
-      v-on:remove="removeCharacter"
     />
-    <add-character v-on:add="addCharacter"/>
+    <manage-characters
+      v-on:add="addCharacter"
+      v-on:remove="removeCharacter"
+      v-bind:selectedCharacters="characters"
+    />
   </div>
 </template>
 
 <script>
-import AddCharacter from "./AddCharacter";
+import ManageCharacters from "./ManageCharacters";
 import Character from "./Character";
 import { Socket } from "phoenix";
+import { objectToArray } from "../util/Character";
 
 export default {
   name: "Game",
   components: {
-    "add-character": AddCharacter,
+    "manage-characters": ManageCharacters,
     charcater: Character
   },
   data() {
@@ -34,10 +38,7 @@ export default {
         gameState: { characters }
       } = this;
 
-      return Object.keys(characters).map(key => ({
-        name: key,
-        ...characters[key]
-      }));
+      return objectToArray(characters);
     }
   },
   mounted() {
