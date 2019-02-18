@@ -1,5 +1,5 @@
 <template>
-  <div v-on:click="$emit('select', { characterName: name, image, type})">
+  <div v-on:click="$emit('select', { name: name, image, type})">
     <img :src="image" :alt="name">
   </div>
 </template>

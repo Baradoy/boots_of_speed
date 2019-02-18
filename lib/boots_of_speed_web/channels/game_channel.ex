@@ -29,13 +29,13 @@ defmodule BootsOfSpeedWeb.GameChannel do
         %{topic: "game:" <> game_name} = socket
       ) do
     game = BootsOfSpeed.GameState.get_game(game_name)
-    broadcast!(socket, "state", %{body: game})
+    broadcast!(socket, "state", game)
     {:noreply, socket}
   end
 
   def handle_in(
         "add_character",
-        %{"body" => %{"characterName" => character_name, "image" => image, "type" => type}},
+        %{"name" => character_name, "image" => image, "type" => type},
         %{topic: "game:" <> game_name} = socket
       ) do
     game =
@@ -45,33 +45,57 @@ defmodule BootsOfSpeedWeb.GameChannel do
         type: type
       })
 
-    broadcast!(socket, "state", %{body: game})
+    broadcast!(socket, "state", game)
     {:noreply, socket}
   end
 
   def handle_in(
         "remove_character",
-        %{"body" => %{"characterName" => character_name}},
+        %{"name" => character_name},
         %{topic: "game:" <> game_name} = socket
       ) do
     game = BootsOfSpeed.GameState.remove_character(game_name, character_name)
-    broadcast!(socket, "state", %{body: game})
+    broadcast!(socket, "state", game)
+    {:noreply, socket}
+  end
+
+  def handle_in(
+        "set_character_initiative",
+        %{
+          "name" => character_name,
+          "image" => image,
+          "type" => type,
+          "initiative" => initiative
+        },
+        %{topic: "game:" <> game_name} = socket
+      ) do
+    game =
+      BootsOfSpeed.GameState.set_character_initiative(game_name, %{
+        character_name: character_name,
+        image: image,
+        type: type,
+        initiative: initiative
+      })
+
+    broadcast!(socket, "state", game)
     {:noreply, socket}
   end
 
   def handle_in("add_game", %{"body" => body}, socket) do
     state = BootsOfSpeed.GameState.add_game(body)
-    broadcast!(socket, "state", %{body: state})
+    broadcast!(socket, "state", state)
     {:noreply, socket}
   end
 
   def handle_in("remove_game", %{"body" => body}, socket) do
     state = BootsOfSpeed.GameState.remove_game(body)
-    broadcast!(socket, "state", %{body: state})
+    broadcast!(socket, "state", state)
     {:noreply, socket}
   end
 
-  def handle_in(_, _, socket) do
+  def handle_in(message, _, socket) do
+    IO.puts("Unhandled message: ")
+    IO.puts(message)
     {:noreply, socket}
   end
 end

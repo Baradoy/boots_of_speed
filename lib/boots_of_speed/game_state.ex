@@ -8,7 +8,7 @@ defmodule BootsOfSpeed.GameState do
   # Client
 
   defp default_state do
-    %{"basegame" => %{characters: %{}}}
+    %{"basegame" => %{characters: %{}, round_stack: [%{characters: %{}}]}}
   end
 
   @spec start_link(any()) :: :ignore | {:error, any()} | {:ok, pid()}
@@ -41,6 +41,18 @@ defmodule BootsOfSpeed.GameState do
 
   def remove_character(game_name, character_name) do
     GenServer.call(__MODULE__, {:remove_character, game_name, character_name})
+  end
+
+  def set_character_initiative(game_name, %{
+        character_name: character_name,
+        image: image,
+        type: type,
+        initiative: initiative
+      }) do
+    GenServer.call(
+      __MODULE__,
+      {:set_character_initiative, game_name, character_name, image, type, initiative}
+    )
   end
 
   # Server (callbacks)
@@ -85,10 +97,55 @@ defmodule BootsOfSpeed.GameState do
         characters ->
           Map.put(characters, character_name, %{
             image: image,
-            type: character_type,
-            color: random_character_color()
+            type: character_type
           })
       end)
+
+    reply(game_name, state)
+  end
+
+  def handle_call(
+        {:set_character_initiative, game_name, character_name, image, character_type, initiative},
+        _from,
+        state
+      ) do
+    state =
+      update_in(state, [game_name, :round_stack, Access.at(0), :characters, character_name], fn
+        _ ->
+          %{
+            image: image,
+            type: character_type,
+            initiative: initiative
+          }
+      end)
+
+    # state =
+    #   update_in(state, [game_name, :round_stack], fn
+    #     [current_round | previous_rounds] ->
+    #       updated_current_round =
+    #         update_in(current_round, [:characters, character_name], fn
+    #           _ ->
+    #             %{
+    #               image: image,
+    #               type: character_type,
+    #               initiative: initiative
+    #             }
+    #         end)
+
+    # update_in(current_round, [:characters], fn
+    #   %{^character_name => _} = characters ->
+    #     %{characters | initiative: initiative}
+
+    #   characters ->
+    #     Map.put(characters, character_name, %{
+    #       image: image,
+    #       type: character_type,
+    #       initiative: initiative
+    #     })
+    # end)
+
+    #     [updated_current_round | previous_rounds]
+    # end)
 
     reply(game_name, state)
   end
@@ -122,18 +179,6 @@ defmodule BootsOfSpeed.GameState do
   :next_round
 
   :previous_round
-
-  :add_character
-
-  :remove_character
-
-  :add_moster
-
-  :remove_monster
-
-  :set_initiative
-
-  :get_current_round
 
   def random_character_color() do
     Enum.random(["#FF00FF", "#FFFF00"])

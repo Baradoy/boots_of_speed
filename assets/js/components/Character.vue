@@ -1,20 +1,46 @@
 <template>
   <div>
-    <img :src="`/images/classes/${name}.jpg`" :alt="name" class="character-icon">
-    {{ name }}
-    <button v-on:click="$emit('remove', { characterName: name })">X</button>
+    <img
+      :src="character.image"
+      :alt="character.name"
+      class="character-icon"
+      v-on:click="openInitiative"
+    >
+    <h2>{{ character.initiative }}</h2>
+    <initiative-select v-if="initiativeModalOpen" v-on:select="setInitiative"/>
   </div>
 </template>
 
 <script>
+import InitiativeSelect from "./InitiativeSelect";
+
 export default {
-  props: ["name"]
+  props: ["character"],
+  components: {
+    "initiative-select": InitiativeSelect
+  },
+  data() {
+    return {
+      initiative: null,
+      initiativeModalOpen: false
+    };
+  },
+  methods: {
+    openInitiative: function(event) {
+      this.initiativeModalOpen = true;
+    },
+    setInitiative: function(event) {
+      this.initiative = event;
+      this.initiativeModalOpen = false;
+      this.$emit("set-initiative", { ...this.character, initiative: event });
+    }
+  }
 };
 </script>
 
 <style>
 .character-icon {
-  max-width: 50px;
-  max-height: 50px;
+  max-width: 100px;
+  max-height: 100px;
 }
 </style>

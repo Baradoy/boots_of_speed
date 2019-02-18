@@ -1,9 +1,17 @@
 <template>
   <div>
     <charcater
-      v-for="character in characters"
+      v-for="character in charactersWithoutInitiatives"
       v-bind:key="character.name"
-      v-bind:name="character.name"
+      v-bind:character="character"
+      v-on:set-initiative="setInitiative"
+    />
+    <h2>Initiative Set:</h2>
+    <charcater
+      v-for="character in charactersWithInitiatives"
+      v-bind:key="character.name"
+      v-bind:character="character"
+      v-on:set-initiative="setInitiative"
     />
     <manage-characters
       v-on:add="addCharacter"
@@ -17,7 +25,7 @@
 import ManageCharacters from "./ManageCharacters";
 import Character from "./Character";
 import { Socket } from "phoenix";
-import { objectToArray } from "../util/Character";
+import { minus, objectToArray } from "../util/Character";
 
 export default {
   name: "Game",
@@ -29,16 +37,33 @@ export default {
     return {
       socket: null,
       channel: null,
-      gameState: { characters: {} }
+      gameState: { characters: {}, round_stack: [{ characters: {} }] }
     };
   },
   computed: {
     characters: function() {
       const {
-        gameState: { characters }
+        gameState: { characters },
+        charactersWithInitiatives
       } = this;
 
       return objectToArray(characters);
+    },
+    charactersWithInitiatives: function() {
+      const {
+        gameState: { round_stack }
+      } = this;
+
+      const { characters } = round_stack[0];
+
+      return objectToArray(characters).sort(
+        ({ initiative: a }, { initiative: b }) => a - b
+      );
+    },
+    charactersWithoutInitiatives: function() {
+      const { characters, charactersWithInitiatives } = this;
+
+      return minus(characters, charactersWithInitiatives);
     }
   },
   mounted() {
@@ -50,8 +75,8 @@ export default {
     this.channel = this.socket.channel("game:" + this.$route.params.id, {});
     this.channel.on("state", payload => {
       console.log("New Game State:");
-      console.log(payload.body);
-      this.gameState = payload.body;
+      console.log(payload);
+      this.gameState = payload;
     });
     this.channel
       .join()
@@ -65,10 +90,13 @@ export default {
   },
   methods: {
     addCharacter: function(event) {
-      this.channel.push("add_character", { body: event });
+      this.channel.push("add_character", event);
     },
     removeCharacter: function(event) {
-      this.channel.push("remove_character", { body: event });
+      this.channel.push("remove_character", event);
+    },
+    setInitiative: function(event) {
+      this.channel.push("set_character_initiative", event);
     }
   }
 };
@@ -76,6 +104,6 @@ export default {
 
 <style scoped>
 div {
-  color: blue;
+  color: purple;
 }
 </style>
