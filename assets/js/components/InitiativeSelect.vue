@@ -13,7 +13,6 @@
         <button v-on:click="setOnes(o)">{{ tens }}{{ o }}</button>
       </div>
     </div>
-    <button v-on:click="clear">Clear</button>
   </div>
 </template>
 
@@ -34,11 +33,6 @@ export default {
     setOnes: function(ones) {
       this.ones = ones;
       this.$emit("select", this.tens * 10 + ones);
-    },
-    clear: function() {
-      this.tens = null;
-      this.ones = null;
-      this.$emit("select", null);
     }
   }
 };
