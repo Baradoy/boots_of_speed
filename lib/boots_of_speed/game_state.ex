@@ -8,7 +8,11 @@ defmodule BootsOfSpeed.GameState do
   # Client
 
   defp default_state do
-    %{"basegame" => %{characters: %{}, round_stack: [%{characters: %{}}]}}
+    %{"basegame" => %{characters: %{}, round_stack: [default_round()]}}
+  end
+
+  defp default_round do
+    %{characters: %{}}
   end
 
   @spec start_link(any()) :: :ignore | {:error, any()} | {:ok, pid()}
@@ -60,7 +64,7 @@ defmodule BootsOfSpeed.GameState do
   end
 
   def previous_round(game_name) do
-    GenServer.call(__MODULE__, {:next_round, game_name})
+    GenServer.call(__MODULE__, {:previous_round, game_name})
   end
 
   # Server (callbacks)
@@ -112,6 +116,15 @@ defmodule BootsOfSpeed.GameState do
     reply(game_name, state)
   end
 
+  def handle_call({:remove_character, game_name, character_name}, _from, state) do
+    state =
+      update_in(state, [game_name, :characters], fn
+        characters -> Map.delete(characters, character_name)
+      end)
+
+    reply(game_name, state)
+  end
+
   def handle_call(
         {:set_character_initiative, game_name, character_name, image, character_type, initiative},
         _from,
@@ -127,41 +140,27 @@ defmodule BootsOfSpeed.GameState do
           }
       end)
 
-    # state =
-    #   update_in(state, [game_name, :round_stack], fn
-    #     [current_round | previous_rounds] ->
-    #       updated_current_round =
-    #         update_in(current_round, [:characters, character_name], fn
-    #           _ ->
-    #             %{
-    #               image: image,
-    #               type: character_type,
-    #               initiative: initiative
-    #             }
-    #         end)
+    reply(game_name, state)
+  end
 
-    # update_in(current_round, [:characters], fn
-    #   %{^character_name => _} = characters ->
-    #     %{characters | initiative: initiative}
-
-    #   characters ->
-    #     Map.put(characters, character_name, %{
-    #       image: image,
-    #       type: character_type,
-    #       initiative: initiative
-    #     })
-    # end)
-
-    #     [updated_current_round | previous_rounds]
-    # end)
+  def handle_call({:next_round, game_name}, _from, state) do
+    state =
+      update_in(state, [game_name, :round_stack], fn
+        round_stack ->
+          [default_round() | round_stack]
+      end)
 
     reply(game_name, state)
   end
 
-  def handle_call({:remove_character, game_name, character_name}, _from, state) do
+  def handle_call({:previous_round, game_name}, _from, state) do
     state =
-      update_in(state, [game_name, :characters], fn
-        characters -> Map.delete(characters, character_name)
+      update_in(state, [game_name, :round_stack], fn
+        [_] ->
+          [default_round()]
+
+        [_poped_round_stack | round_stack] ->
+          round_stack
       end)
 
     reply(game_name, state)
@@ -195,6 +194,7 @@ defmodule BootsOfSpeed.GameState do
   def reply(game_name, state) do
     game = Map.get(state, game_name)
 
+    IO.inspect(game)
     {:reply, game, state}
   end
 end

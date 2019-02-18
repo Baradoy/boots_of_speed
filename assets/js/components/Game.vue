@@ -18,6 +18,9 @@
       v-on:remove="removeCharacter"
       v-bind:selectedCharacters="characters"
     />
+
+    <button v-on:click="previousRound">Previous Round</button>
+    <button v-on:click="nextRound">Next Round</button>
   </div>
 </template>
 
@@ -97,6 +100,12 @@ export default {
     },
     setInitiative: function(event) {
       this.channel.push("set_character_initiative", event);
+    },
+    nextRound: function(event) {
+      this.channel.push("next_round");
+    },
+    previousRound: function(event) {
+      this.channel.push("previous_round");
     }
   }
 };

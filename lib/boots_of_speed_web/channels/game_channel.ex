@@ -82,22 +82,22 @@ defmodule BootsOfSpeedWeb.GameChannel do
   end
 
   def handle_in(
-        "set_character_initiative",
-        %{
-          "name" => character_name,
-          "image" => image,
-          "type" => type,
-          "initiative" => initiative
-        },
+        "next_round",
+        _,
         %{topic: "game:" <> game_name} = socket
       ) do
-    game =
-      BootsOfSpeed.GameState.set_character_initiative(game_name, %{
-        character_name: character_name,
-        image: image,
-        type: type,
-        initiative: initiative
-      })
+    game = BootsOfSpeed.GameState.next_round(game_name)
+
+    broadcast!(socket, "state", game)
+    {:noreply, socket}
+  end
+
+  def handle_in(
+        "previous_round",
+        _,
+        %{topic: "game:" <> game_name} = socket
+      ) do
+    game = BootsOfSpeed.GameState.previous_round(game_name)
 
     broadcast!(socket, "state", game)
     {:noreply, socket}
