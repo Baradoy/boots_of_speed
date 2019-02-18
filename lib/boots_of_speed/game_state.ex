@@ -55,6 +55,14 @@ defmodule BootsOfSpeed.GameState do
     )
   end
 
+  def next_round(game_name) do
+    GenServer.call(__MODULE__, {:next_round, game_name})
+  end
+
+  def previous_round(game_name) do
+    GenServer.call(__MODULE__, {:next_round, game_name})
+  end
+
   # Server (callbacks)
 
   @impl true

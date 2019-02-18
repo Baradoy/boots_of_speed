@@ -81,6 +81,28 @@ defmodule BootsOfSpeedWeb.GameChannel do
     {:noreply, socket}
   end
 
+  def handle_in(
+        "set_character_initiative",
+        %{
+          "name" => character_name,
+          "image" => image,
+          "type" => type,
+          "initiative" => initiative
+        },
+        %{topic: "game:" <> game_name} = socket
+      ) do
+    game =
+      BootsOfSpeed.GameState.set_character_initiative(game_name, %{
+        character_name: character_name,
+        image: image,
+        type: type,
+        initiative: initiative
+      })
+
+    broadcast!(socket, "state", game)
+    {:noreply, socket}
+  end
+
   def handle_in("add_game", %{"body" => body}, socket) do
     state = BootsOfSpeed.GameState.add_game(body)
     broadcast!(socket, "state", state)
