@@ -110,11 +110,11 @@ export default {
 }
 
 .character-header-player {
-  flex-grow: 1;
+  flex: 1;
 }
 
 .character-header-monster {
-  flex-grow: 2;
+  flex: 2;
 }
 
 .character-body-player {
