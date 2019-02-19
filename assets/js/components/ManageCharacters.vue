@@ -100,19 +100,21 @@ export default {
 .character-header {
   display: flex;
   flex-flow: row nowrap;
+  width: 100%;
 }
 
 .character-body {
   display: flex;
   flex-flow: row nowrap;
+  width: 100%;
 }
 
 .character-header-player {
-  flex: 1;
+  flex-grow: 1;
 }
 
 .character-header-monster {
-  flex: 2;
+  flex-grow: 2;
 }
 
 .character-body-player {

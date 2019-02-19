@@ -7,7 +7,11 @@
       v-on:click="openInitiative"
     >
     <h2>{{ character.initiative }}</h2>
-    <initiative-select v-if="initiativeModalOpen" v-on:select="setInitiative"/>
+    <initiative-select
+      v-if="initiativeModalOpen"
+      v-on:select="setInitiative"
+      v-bind:character="character"
+    />
   </div>
 </template>
 

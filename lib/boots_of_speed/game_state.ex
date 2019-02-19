@@ -194,7 +194,6 @@ defmodule BootsOfSpeed.GameState do
   def reply(game_name, state) do
     game = Map.get(state, game_name)
 
-    IO.inspect(game)
     {:reply, game, state}
   end
 end

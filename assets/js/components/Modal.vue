@@ -35,39 +35,48 @@ export default {};
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
-  display: table;
   transition: opacity 0.3s ease;
 }
 
 .modal-wrapper {
-  display: table-cell;
-  vertical-align: middle;
+  margin: auto;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-block;
 }
 
 .modal-container {
-  min-width: 300px;
+  display: flex;
+  flex-flow: column nowrap;
   max-width: calc(100vw - 30px);
   max-height: calc(100vh - 15px);
-  overflow-y: auto;
-  margin: 0px auto;
   padding: 20px 30px;
   background-color: #fff;
   border-radius: 2px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   transition: all 0.3s ease;
-  font-family: Helvetica, Arial, sans-serif;
+  overflow-y: auto;
 }
 
-.modal-header h3 {
+.modal-header {
   margin-top: 0;
+  display: flex;
+  flex-flow: row nowrap;
+  flex-shrink: 0;
 }
 
 .modal-body {
   margin: 20px 0;
+  display: flex;
+  flex-flow: row nowrap;
+  flex-shrink: 0;
 }
 
-.modal-default-button {
-  float: right;
+.modal-footer {
+  display: flex;
+  flex-flow: row nowrap;
+  flex-shrink: 0;
 }
 
 /*

@@ -27,6 +27,7 @@
 <script>
 import ManageCharacters from "./ManageCharacters";
 import Character from "./Character";
+import Modal from "./Modal";
 import { Socket } from "phoenix";
 import { minus, objectToArray } from "../util/Character";
 
@@ -34,7 +35,8 @@ export default {
   name: "Game",
   components: {
     "manage-characters": ManageCharacters,
-    charcater: Character
+    charcater: Character,
+    modal: Modal
   },
   data() {
     return {
