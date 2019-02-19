@@ -3,19 +3,13 @@
     <div class="modal-mask">
       <div class="modal-wrapper">
         <div class="modal-container">
-          <div class="modal-header">
-            <slot name="header"></slot>
-          </div>
-
-          <div class="modal-body">
-            <slot name="body"></slot>
-          </div>
-
-          <div class="modal-footer">
-            <slot name="footer">
+          <slot name="header" class="modal-header"></slot>
+          <slot name="body" class="modal-body"></slot>
+          <slot name="footer" class="modal-footer">
+            <div>
               <button class="modal-default-button" v-on:click="$emit('close')">OK</button>
-            </slot>
-          </div>
+            </div>
+          </slot>
         </div>
       </div>
     </div>
@@ -60,6 +54,7 @@ export default {};
 }
 
 .modal-header {
+
   margin-top: 0;
   display: flex;
   flex-flow: row nowrap;

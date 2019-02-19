@@ -101,12 +101,14 @@ export default {
   display: flex;
   flex-flow: row nowrap;
   width: 100%;
+  flex-shrink: 0;
 }
 
 .character-body {
   display: flex;
   flex-flow: row nowrap;
   width: 100%;
+  flex-shrink: 0;
 }
 
 .character-header-player {
