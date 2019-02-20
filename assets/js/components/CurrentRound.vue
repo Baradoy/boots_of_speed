@@ -53,7 +53,7 @@ export default {
     },
     initiativeCharcters: function() {
       return this.characters.filter(
-        ({ initiative }) => initiative !== null || initiative !== undefined
+        ({ initiative }) => initiative !== null && initiative !== undefined
       );
     }
   },

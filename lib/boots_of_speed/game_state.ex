@@ -35,8 +35,17 @@ defmodule BootsOfSpeed.GameState do
 
   def next_round(state, game_name) do
     update_in(state, [game_name, :round_stack], fn
-      round_stack ->
-        [default_round() | round_stack]
+      [current_round | round_stack] ->
+        [transform_round(current_round) | [current_round | round_stack]]
+    end)
+  end
+
+  defp transform_round(current_round) do
+    update_in(current_round, [:characters], fn
+      characters ->
+        Map.new(characters, fn
+          {name, character} -> {name, Map.delete(character, :initiative)}
+        end)
     end)
   end
 

@@ -32,7 +32,7 @@ export default {
     return {
       socket: null,
       channel: null,
-      gameState: { characters: {}, round_stack: [{ characters: {} }] }
+      gameState: { round_stack: [{ characters: {} }] }
     };
   },
   computed: {
@@ -49,20 +49,6 @@ export default {
       } = this;
 
       return objectToArray(characters);
-    },
-    charactersWithInitiatives: function() {
-      const initiativeCharacters = this.characters.filter(
-        ({ initiative }) => initiative !== null && initiative !== undefined
-      );
-
-      return objectToArray(initiativeCharacters).sort(
-        ({ initiative: a }, { initiative: b }) => a - b
-      );
-    },
-    charactersWithoutInitiatives: function() {
-      const { characters, charactersWithInitiatives } = this;
-
-      return minus(characters, charactersWithInitiatives);
     }
   },
   mounted() {
