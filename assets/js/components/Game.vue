@@ -1,19 +1,6 @@
 <template>
   <div>
     <current-round v-bind:round="currentRound" v-on:set-initiative="setInitiative"/>
-    <charcater
-      v-for="character in charactersWithoutInitiatives"
-      v-bind:key="character.name"
-      v-bind:character="character"
-      v-on:set-initiative="setInitiative"
-    />
-    <h2>Initiative Set:</h2>
-    <charcater
-      v-for="character in charactersWithInitiatives"
-      v-bind:key="character.name"
-      v-bind:character="character"
-      v-on:set-initiative="setInitiative"
-    />
     <manage-characters
       v-on:add="addCharacter"
       v-on:remove="removeCharacter"
@@ -58,16 +45,17 @@ export default {
     },
     characters: function() {
       const {
-        gameState: { characters },
-        charactersWithInitiatives
+        currentRound: { characters }
       } = this;
 
       return objectToArray(characters);
     },
     charactersWithInitiatives: function() {
-      const { characters } = this.currentRound;
+      const initiativeCharacters = this.characters.filter(
+        ({ initiative }) => initiative !== null && initiative !== undefined
+      );
 
-      return objectToArray(characters).sort(
+      return objectToArray(initiativeCharacters).sort(
         ({ initiative: a }, { initiative: b }) => a - b
       );
     },
@@ -101,19 +89,19 @@ export default {
   },
   methods: {
     addCharacter: function(event) {
-      this.channel.push("add_character", event);
+      console.log(this.channel.push("add_character", event));
     },
     removeCharacter: function(event) {
-      this.channel.push("remove_character", event);
+      console.log(this.channel.push("remove_character", event));
     },
     setInitiative: function(event) {
-      this.channel.push("set_character_initiative", event);
+      console.log(this.channel.push("set_character_initiative", event));
     },
     nextRound: function(event) {
-      this.channel.push("next_round");
+      console.log(this.channel.push("next_round"));
     },
     previousRound: function(event) {
-      this.channel.push("previous_round");
+      console.log(this.channel.push("previous_round"));
     }
   }
 };

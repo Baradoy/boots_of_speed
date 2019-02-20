@@ -34,6 +34,7 @@ export default {
       this.initiativeModalOpen = true;
     },
     setInitiative: function(event) {
+      console.log("setInitiative", this.character, event);
       this.initiative = event;
       this.initiativeModalOpen = false;
       this.$emit("set-initiative", { ...this.character, initiative: event });

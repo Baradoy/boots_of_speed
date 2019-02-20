@@ -59,7 +59,7 @@ export default {
   },
   methods: {
     setInitiative: function(event) {
-      this.channel.push("setInitiative", event);
+      this.$emit("set-initiative", event);
     }
   }
 };

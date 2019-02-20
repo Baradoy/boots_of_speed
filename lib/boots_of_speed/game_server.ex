@@ -5,19 +5,13 @@ defmodule BootsOfSpeed.GameServer do
 
   use GenServer
 
+  alias BootsOfSpeed.GameState
+
   # Client
-
-  defp default_state do
-    %{"basegame" => %{characters: %{}, round_stack: [default_round()]}}
-  end
-
-  defp default_round do
-    %{characters: %{}}
-  end
 
   @spec start_link(any()) :: :ignore | {:error, any()} | {:ok, pid()}
   def start_link(_) do
-    GenServer.start_link(__MODULE__, default_state(), name: __MODULE__)
+    GenServer.start_link(__MODULE__, GameState.default_state(), name: __MODULE__)
   end
 
   ## Game Management
@@ -49,13 +43,11 @@ defmodule BootsOfSpeed.GameServer do
 
   def set_character_initiative(game_name, %{
         character_name: character_name,
-        image: image,
-        type: type,
         initiative: initiative
       }) do
     GenServer.call(
       __MODULE__,
-      {:set_character_initiative, game_name, character_name, image, type, initiative}
+      {:set_character_initiative, game_name, character_name, initiative}
     )
   end
 
@@ -96,80 +88,34 @@ defmodule BootsOfSpeed.GameServer do
     {:reply, state, state}
   end
 
-  def handle_call(
-        {:add_character, game_name, character_name, image, character_type},
-        _from,
-        state
-      ) do
-    state =
-      update_in(state, [game_name, :characters], fn
-        %{^character_name => _} = characters ->
-          characters
-
-        characters ->
-          Map.put(characters, character_name, %{
-            image: image,
-            type: character_type
-          })
-      end)
-
-    reply(game_name, state)
+  def handle_call({:add_character, game_name, character_name, image, type}, _from, state) do
+    state
+    |> GameState.add_charcacter(game_name, character_name, image, type)
+    |> reply(game_name)
   end
 
   def handle_call({:remove_character, game_name, character_name}, _from, state) do
-    state =
-      update_in(state, [game_name, :characters], fn
-        characters -> Map.delete(characters, character_name)
-      end)
-
-    reply(game_name, state)
+    state
+    |> GameState.remove_character(game_name, character_name)
+    |> reply(game_name)
   end
 
-  def handle_call(
-        {:set_character_initiative, game_name, character_name, image, character_type, initiative},
-        _from,
-        state
-      ) do
-    state =
-      update_in(state, [game_name, :round_stack, Access.at(0), :characters, character_name], fn
-        _ ->
-          %{
-            image: image,
-            type: character_type,
-            initiative: initiative
-          }
-      end)
-
-    reply(game_name, state)
+  def handle_call({:set_character_initiative, game_name, character_name, initiative}, _from, state) do
+    state
+    |> GameState.set_character_initiative(game_name, character_name, initiative)
+    |> reply(game_name)
   end
 
   def handle_call({:next_round, game_name}, _from, state) do
-    state =
-      update_in(state, [game_name, :round_stack], fn
-        round_stack ->
-          [default_round() | round_stack]
-      end)
-
-    reply(game_name, state)
+    state
+    |> GameState.next_round(game_name)
+    |> reply(game_name)
   end
 
   def handle_call({:previous_round, game_name}, _from, state) do
-    state =
-      update_in(state, [game_name, :round_stack], fn
-        [_] ->
-          [default_round()]
-
-        [_poped_round_stack | round_stack] ->
-          round_stack
-      end)
-
-    reply(game_name, state)
-  end
-
-  def handle_call({:get_current_round, game_name}, _from, state) do
-    round = state |> Map.get(game_name, %{})
-
-    {:reply, round, state}
+    state
+    |> GameState.previous_round(game_name)
+    |> reply(game_name)
   end
 
   @impl true
@@ -183,7 +129,7 @@ defmodule BootsOfSpeed.GameServer do
     {:noreply, state}
   end
 
-  def reply(game_name, state) do
+  defp reply(state, game_name) do
     game = Map.get(state, game_name)
 
     {:reply, game, state}
