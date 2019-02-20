@@ -90,7 +90,7 @@ defmodule BootsOfSpeed.GameServer do
 
   def handle_call({:add_character, game_name, character_name, image, type}, _from, state) do
     state
-    |> GameState.add_charcacter(game_name, character_name, image, type)
+    |> GameState.add_character(game_name, character_name, image, type)
     |> reply(game_name)
   end
 

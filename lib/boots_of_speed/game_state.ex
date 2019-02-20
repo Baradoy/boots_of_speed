@@ -11,7 +11,7 @@ defmodule BootsOfSpeed.GameState do
     %{characters: %{}}
   end
 
-  def add_charcacter(state, game_name, name, image, type) do
+  def add_character(state, game_name, name, image, type) do
     update_in(state, [game_name, :round_stack, Access.at(0), :characters], fn
       characters ->
         Map.put(characters, name, %{
