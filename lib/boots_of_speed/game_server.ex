@@ -1,6 +1,6 @@
-defmodule BootsOfSpeed.GameState do
+defmodule BootsOfSpeed.GameServer do
   @moduledoc """
-  Store Game State for running games
+  GenServer for Gloomhaven Game State
   """
 
   use GenServer
@@ -181,14 +181,6 @@ defmodule BootsOfSpeed.GameState do
   def handle_cast({:add_game, game_name}, state) do
     state = state |> Map.put(game_name, %{})
     {:noreply, state}
-  end
-
-  :next_round
-
-  :previous_round
-
-  def random_character_color() do
-    Enum.random(["#FF00FF", "#FFFF00"])
   end
 
   def reply(game_name, state) do

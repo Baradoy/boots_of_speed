@@ -12,7 +12,7 @@ defmodule BootsOfSpeed.Application do
       BootsOfSpeedWeb.Endpoint,
       # Starts a worker by calling: BootsOfSpeed.Worker.start_link(arg)
       # {BootsOfSpeed.Worker, arg},
-      BootsOfSpeed.GameState
+      BootsOfSpeed.GameServer
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

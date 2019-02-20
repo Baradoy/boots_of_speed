@@ -1,5 +1,6 @@
 <template>
   <div>
+    <current-round v-bind:round="currentRound" v-on:set-initiative="setInitiative"/>
     <charcater
       v-for="character in charactersWithoutInitiatives"
       v-bind:key="character.name"
@@ -28,6 +29,7 @@
 import ManageCharacters from "./ManageCharacters";
 import Character from "./Character";
 import Modal from "./Modal";
+import CurrentRound from "./CurrentRound";
 import { Socket } from "phoenix";
 import { minus, objectToArray } from "../util/Character";
 
@@ -35,6 +37,7 @@ export default {
   name: "Game",
   components: {
     "manage-characters": ManageCharacters,
+    "current-round": CurrentRound,
     charcater: Character,
     modal: Modal
   },
@@ -46,6 +49,13 @@ export default {
     };
   },
   computed: {
+    currentRound: function() {
+      const {
+        gameState: { round_stack }
+      } = this;
+
+      return round_stack[0];
+    },
     characters: function() {
       const {
         gameState: { characters },
@@ -55,11 +65,7 @@ export default {
       return objectToArray(characters);
     },
     charactersWithInitiatives: function() {
-      const {
-        gameState: { round_stack }
-      } = this;
-
-      const { characters } = round_stack[0];
+      const { characters } = this.currentRound;
 
       return objectToArray(characters).sort(
         ({ initiative: a }, { initiative: b }) => a - b
