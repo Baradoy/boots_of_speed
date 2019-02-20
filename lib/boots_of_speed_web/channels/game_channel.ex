@@ -6,14 +6,13 @@ defmodule BootsOfSpeedWeb.GameChannel do
   use Phoenix.Channel
   alias BootsOfSpeed.GameServer
 
-  @spec join(<<_::40, _::_*8>>, any(), any()) ::
-          {:error, %{reason: <<_::96>>}} | {:ok, <<_::64, _::_*8>>, any()}
   def join("game:lobby", _message, socket) do
     {:ok, "You joined!", socket}
   end
 
   def join("game:" <> game_name, _params, socket) do
-    GameServer.get_game(game_name)
+    game_name
+    |> GameServer.get_game()
     |> case do
       %{} ->
         assign(socket, :game_name, game_name)
