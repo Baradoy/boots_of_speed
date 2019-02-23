@@ -8,7 +8,17 @@ Keeping track of initiative in Gloomhaven is tricky and error prone. BootsOfSpee
 
 [![CircleCI](https://circleci.com/gh/Baradoy/boots_of_speed/tree/master.svg?style=svg)](https://circleci.com/gh/Baradoy/boots_of_speed/tree/master)
 
-This project is in early stages and can be considered pre-alpha.
+This project has basic functionality for a single game. Next steps will likely include:
+
+- Game management - The ability to add a game, have that game represented by a code that other players can join, and have that game clean itself up after it is no longer used.
+
+- Error handling - Having a happy path is nice, but if you go off that path you will loose the current state of the game. That is not fun at all.
+
+- Deployment - A path for deployment and hopefully even a sample server to run the game.
+
+- Magic Tracking - Magic wax and wanes during a game of Gloomhaven. This should be included in the app.
+
+- Current Initiative Tracking - As characters take their turn, there should be a big visual cue as to which characters have gone and who is next.
 
 ## Vue and Elixir Websockets
 
