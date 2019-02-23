@@ -6,6 +6,8 @@ Keeping track of initiative in Gloomhaven is tricky and error prone. BootsOfSpee
 
 ## Current Status
 
+[![CircleCI](https://circleci.com/gh/Baradoy/boots_of_speed/tree/master.svg?style=svg)](https://circleci.com/gh/Baradoy/boots_of_speed/tree/master)
+
 This project is in early stages and can be considered pre-alpha.
 
 ## Vue and Elixir Websockets
