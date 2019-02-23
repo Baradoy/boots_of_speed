@@ -103,18 +103,6 @@ defmodule BootsOfSpeedWeb.GameChannel do
     {:noreply, socket}
   end
 
-  def handle_in("add_game", %{"body" => body}, socket) do
-    state = GameServer.add_game(body)
-    broadcast!(socket, "state", state)
-    {:noreply, socket}
-  end
-
-  def handle_in("remove_game", %{"body" => body}, socket) do
-    state = GameServer.remove_game(body)
-    broadcast!(socket, "state", state)
-    {:noreply, socket}
-  end
-
   def handle_in(message, _, socket) do
     IO.puts("Unhandled message: ")
     IO.puts(message)

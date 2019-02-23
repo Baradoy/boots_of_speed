@@ -10,53 +10,48 @@ defmodule BootsOfSpeed.GameServer do
   # Client
 
   @spec start_link(any()) :: :ignore | {:error, any()} | {:ok, pid()}
-  def start_link(_) do
+  def start_link([]) do
     GenServer.start_link(__MODULE__, GameState.default_state(), name: __MODULE__)
   end
 
+  def start_link(state) do
+    GenServer.start_link(__MODULE__, state)
+  end
+
   ## Game Management
-  def add_game(game_name) do
-    GenServer.call(__MODULE__, {:add_game, game_name})
-  end
-
-  def remove_game(game_name) do
-    GenServer.call(__MODULE__, {:remove_game, game_name})
-  end
-
-  def list_game() do
-    GenServer.call(__MODULE__, :list_game)
-  end
-
-  def get_game(game_name) do
-    GenServer.call(__MODULE__, {:get_game, game_name})
+  def get_game(game_name, pid \\ __MODULE__) do
+    GenServer.call(pid, {:get_game, game_name})
   end
 
   # Character Management
-  @spec add_character(any(), any()) :: any()
-  def add_character(game_name, %{character_name: character_name, image: image, type: type}) do
-    GenServer.call(__MODULE__, {:add_character, game_name, character_name, image, type})
+  def add_character(game_name, %{character_name: character_name, image: image, type: type}, pid \\ __MODULE__) do
+    GenServer.call(pid, {:add_character, game_name, character_name, image, type})
   end
 
-  def remove_character(game_name, character_name) do
-    GenServer.call(__MODULE__, {:remove_character, game_name, character_name})
+  def remove_character(game_name, character_name, pid \\ __MODULE__) do
+    GenServer.call(pid, {:remove_character, game_name, character_name})
   end
 
-  def set_character_initiative(game_name, %{
-        character_name: character_name,
-        initiative: initiative
-      }) do
+  def set_character_initiative(
+        game_name,
+        %{
+          character_name: character_name,
+          initiative: initiative
+        },
+        pid \\ __MODULE__
+      ) do
     GenServer.call(
-      __MODULE__,
+      pid,
       {:set_character_initiative, game_name, character_name, initiative}
     )
   end
 
-  def next_round(game_name) do
-    GenServer.call(__MODULE__, {:next_round, game_name})
+  def next_round(game_name, pid \\ __MODULE__) do
+    GenServer.call(pid, {:next_round, game_name})
   end
 
-  def previous_round(game_name) do
-    GenServer.call(__MODULE__, {:previous_round, game_name})
+  def previous_round(game_name, pid \\ __MODULE__) do
+    GenServer.call(pid, {:previous_round, game_name})
   end
 
   # Server (callbacks)
@@ -116,17 +111,6 @@ defmodule BootsOfSpeed.GameServer do
     state
     |> GameState.previous_round(game_name)
     |> reply(game_name)
-  end
-
-  @impl true
-  def handle_cast({:remove_game, game_name}, state) do
-    state = state |> Map.delete(game_name)
-    {:noreply, state}
-  end
-
-  def handle_cast({:add_game, game_name}, state) do
-    state = state |> Map.put(game_name, %{})
-    {:noreply, state}
   end
 
   defp reply(state, game_name) do
