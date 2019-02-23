@@ -10,7 +10,7 @@ defmodule BootsOfSpeed.MixProject do
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      dialyzer: []
+      dialyzer: [ignore_warnings: "dialyzer.ignore-warnings"]
     ]
   end
 
