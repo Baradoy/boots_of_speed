@@ -52,9 +52,11 @@ export default {
       return this.characters.filter(({ type }) => type === "monster");
     },
     initiativeCharcters: function() {
-      return this.characters.filter(
-        ({ initiative }) => initiative !== null && initiative !== undefined
-      );
+      return this.characters
+        .filter(
+          ({ initiative }) => initiative !== null && initiative !== undefined
+        )
+        .sort(({ initiative: a }, { initiative: b }) => a - b);
     }
   },
   methods: {
