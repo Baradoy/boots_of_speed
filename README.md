@@ -28,6 +28,7 @@ One of the main motivating factors for this project was to build something in El
 
 To start your Phoenix server:
 
+- Install Erlang and Elixir Versions `asdf install`
 - Install dependencies with `mix deps.get`
 - Install Node.js dependencies with `cd assets && npm install`
 - Start Phoenix endpoint with `mix phx.server`
