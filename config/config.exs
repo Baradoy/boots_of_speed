@@ -10,7 +10,7 @@ use Mix.Config
 # Configures the endpoint
 config :boots_of_speed, BootsOfSpeedWeb.Endpoint,
   url: [host: "localhost"],
-  secret_key_base: "ScF0M9rfusnHxBjzZv9AC+QKIRGTEC8GAQ17YkkjPpLk/1Cq6BDeoZWbBhbOWwn6",
+  secret_key_base: "z+nRcIQP0V0CEG/OXAaG2DkObxLI9Z0X0ZGm7gp53LEpG7PNQpJDVOYIcdleEbBw",
   render_errors: [view: BootsOfSpeedWeb.ErrorView, accepts: ~w(html json)],
   pubsub: [name: BootsOfSpeed.PubSub, adapter: Phoenix.PubSub.PG2]
 

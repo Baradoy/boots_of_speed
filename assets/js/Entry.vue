@@ -1,13 +1,13 @@
 <template>
   <div id="app">
     <h2>Boots of Speed</h2>
-    <router-view/>
+    <router-view />
   </div>
 </template>
 
 <script>
 export default {
-  name: "App"
+  name: "Entry"
 };
 </script>
 

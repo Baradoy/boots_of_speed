@@ -49,10 +49,10 @@ config :boots_of_speed, BootsOfSpeedWeb.Endpoint,
 config :boots_of_speed, BootsOfSpeedWeb.Endpoint,
   live_reload: [
     patterns: [
-      ~r{priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$},
-      ~r{priv/gettext/.*(po)$},
-      ~r{lib/boots_of_speed_web/views/.*(ex)$},
-      ~r{lib/boots_of_speed_web/templates/.*(eex)$}
+      ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
+      ~r"priv/gettext/.*(po)$",
+      ~r"lib/boots_of_speed_web/{live,views}/.*(ex)$",
+      ~r"lib/boots_of_speed_web/templates/.*(eex)$"
     ]
   ]
 

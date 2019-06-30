@@ -24,7 +24,7 @@ defmodule BootsOfSpeedWeb.Endpoint do
   end
 
   plug Plug.RequestId
-  plug Plug.Logger
+  plug Plug.Telemetry, event_prefix: [:phoenix, :endpoint]
 
   plug Plug.Parsers,
     parsers: [:urlencoded, :multipart, :json],
@@ -40,7 +40,7 @@ defmodule BootsOfSpeedWeb.Endpoint do
   plug Plug.Session,
     store: :cookie,
     key: "_boots_of_speed_key",
-    signing_salt: "JsMHZ7Zm"
+    signing_salt: "7YwdSLgg"
 
   plug BootsOfSpeedWeb.Router
 end

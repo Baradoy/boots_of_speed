@@ -43,3 +43,6 @@ npm-debug.log
 
 # Elixir Dialyzer plugin for VS Code
 .elixir_ls/
+
+# OSX files
+.DS_Store
