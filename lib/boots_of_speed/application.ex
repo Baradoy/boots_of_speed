@@ -9,15 +9,14 @@ defmodule BootsOfSpeed.Application do
     # List all child processes to be supervised
     children = [
       # Start the endpoint when the application starts
-      BootsOfSpeedWeb.Endpoint,
+      # BootsOfSpeedWeb.Endpoint,
       # Starts a worker by calling: BootsOfSpeed.Worker.start_link(arg)
       # {BootsOfSpeed.Worker, arg},
-      BootsOfSpeed.GameServer
+      # BootsOfSpeed.GameServer
+      BootsOfSpeed.Supervisor
     ]
 
-    # See https://hexdocs.pm/elixir/Supervisor.html
-    # for other strategies and supported options
-    opts = [strategy: :one_for_one, name: BootsOfSpeed.Supervisor]
+    opts = [strategy: :one_for_one]
     Supervisor.start_link(children, opts)
   end
 
