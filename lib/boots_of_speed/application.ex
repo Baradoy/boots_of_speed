@@ -8,16 +8,14 @@ defmodule BootsOfSpeed.Application do
   def start(_type, _args) do
     # List all child processes to be supervised
     children = [
-      # Start the endpoint when the application starts
-      # BootsOfSpeedWeb.Endpoint,
-      # Starts a worker by calling: BootsOfSpeed.Worker.start_link(arg)
-      # {BootsOfSpeed.Worker, arg},
-      # BootsOfSpeed.GameServer
+      BootsOfSpeedWeb.Endpoint,
       BootsOfSpeed.Supervisor
     ]
 
     opts = [strategy: :one_for_one]
     Supervisor.start_link(children, opts)
+
+    BootsOfSpeed.Server.start_game_state_server("basegame")
   end
 
   # Tell Phoenix to update the endpoint configuration

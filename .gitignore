@@ -46,3 +46,6 @@ npm-debug.log
 
 # OSX files
 .DS_Store
+
+# VS Code
+.vscode

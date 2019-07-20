@@ -13,7 +13,7 @@ defmodule BootsOfSpeed.Supervisor do
   end
 
   @impl true
-  def init(arg) do
+  def init(_arg) do
     children = [
       {BootsOfSpeed.Server, [self()]}
     ]
