@@ -9,6 +9,7 @@ defmodule BootsOfSpeed.GameStateAgent do
   @type character :: %{name: String.t(), type: character_type, image: String.t()}
   @type character_type :: String.t()
   @type game_name :: String.t()
+  @type agent :: pid()
 
   defmodule State do
     @moduledoc """
@@ -39,7 +40,7 @@ defmodule BootsOfSpeed.GameStateAgent do
     %{characters: %{}}
   end
 
-  @spec add_character(String.t(), String.t(), character_type, Agent.t()) :: game_state
+  @spec add_character(String.t(), String.t(), character_type, agent) :: {:ok, game_state}
   def add_character(character_name, image, type, agent) do
     Agent.update(agent, fn %State{} = state ->
       update_in(state, [:round_stack, Access.at(0), :characters], fn
@@ -54,7 +55,7 @@ defmodule BootsOfSpeed.GameStateAgent do
     get_state(agent)
   end
 
-  @spec remove_character(String.t(), Agent.t()) :: game_state
+  @spec remove_character(String.t(), agent) :: {:ok, game_state}
   def remove_character(name, agent) do
     Agent.update(agent, fn %State{} = state ->
       update_in(state, [:round_stack, Access.at(0), :characters], fn
@@ -65,7 +66,7 @@ defmodule BootsOfSpeed.GameStateAgent do
     get_state(agent)
   end
 
-  @spec set_character_initiative(String.t(), integer(), Agent.t()) :: game_state
+  @spec set_character_initiative(String.t(), integer(), agent) :: {:ok, game_state}
   def set_character_initiative(name, initiative, agent) do
     Agent.update(agent, fn %State{} = state ->
       update_in(state, [:round_stack, Access.at(0), :characters, name], fn
@@ -76,7 +77,7 @@ defmodule BootsOfSpeed.GameStateAgent do
     get_state(agent)
   end
 
-  @spec next_round(Agent.t()) :: game_state
+  @spec next_round(agent) :: {:ok, game_state}
   def next_round(agent) do
     Agent.update(agent, fn %State{} = state ->
       update_in(state, [:round_stack], fn
@@ -87,7 +88,7 @@ defmodule BootsOfSpeed.GameStateAgent do
     get_state(agent)
   end
 
-  @spec previous_round(Agent.t()) :: game_state
+  @spec previous_round(agent) :: {:ok, game_state}
   def previous_round(agent) do
     Agent.update(agent, fn %State{} = state ->
       update_in(state, [:round_stack], fn
