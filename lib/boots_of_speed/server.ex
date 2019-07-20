@@ -52,7 +52,6 @@ defmodule BootsOfSpeed.Server do
 
   def handle_call({:start_game_state_server, game_name}, _, %State{} = state) do
     %State{games: games} = state
-    # TODO Handle game already existing
 
     game_state_agent = start_new_game(game_name, games)
 
