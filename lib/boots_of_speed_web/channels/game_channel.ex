@@ -21,7 +21,7 @@ defmodule BootsOfSpeedWeb.GameChannel do
         {:ok, "Joined #{game_name}!", socket}
 
       _ ->
-        {:error, %{reason: "No such game!"}}
+        {:error, %{message: "No such game!"}}
     end
   end
 

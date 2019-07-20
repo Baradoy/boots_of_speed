@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <current-round v-bind:round="currentRound" v-on:set-initiative="setInitiative"/>
+  <div v-if="gameState">
+    <current-round v-bind:round="currentRound" v-on:set-initiative="setInitiative" />
     <manage-characters
       v-on:add="addCharacter"
       v-on:remove="removeCharacter"
@@ -10,6 +10,9 @@
     <button v-on:click="previousRound">Previous Round</button>
     <button v-on:click="nextRound">Next Round</button>
   </div>
+  <div v-else-if="loading">Loading</div>
+  <div v-else-if="error">{{ error }}</div>
+  <div v-else>Uncaught Error</div>
 </template>
 
 <script>
@@ -32,7 +35,9 @@ export default {
     return {
       socket: null,
       channel: null,
-      gameState: { round_stack: [{ characters: {} }] }
+      gameState: null,
+      loading: true,
+      error: null
     };
   },
   computed: {
@@ -61,32 +66,42 @@ export default {
     this.channel.on("state", payload => {
       console.log("New Game State:");
       console.log(payload);
+      this.loading = false;
       this.gameState = payload;
     });
     this.channel
       .join()
       .receive("ok", resp => {
         console.log("Joined successfully", resp);
+        this.loading = false;
       })
       .receive("error", resp => {
         console.log("Unable to join", resp);
+        this.loading = false;
+        this.error = resp.message;
+        console.log("join error", this.error);
       });
     this.channel.push("get_state");
   },
   methods: {
     addCharacter: function(event) {
+      this.loading = true;
       console.log(this.channel.push("add_character", event));
     },
     removeCharacter: function(event) {
+      this.loading = true;
       console.log(this.channel.push("remove_character", event));
     },
     setInitiative: function(event) {
+      this.loading = true;
       console.log(this.channel.push("set_character_initiative", event));
     },
     nextRound: function(event) {
+      this.loading = true;
       console.log(this.channel.push("next_round"));
     },
     previousRound: function(event) {
+      this.loading = true;
       console.log(this.channel.push("previous_round"));
     }
   }
