@@ -1,7 +1,13 @@
 defmodule BootsOfSpeed.Server do
+  @moduledoc """
+    Handles creating and retrieving game agents
+  """
   use GenServer
 
   defmodule State do
+    @moduledoc """
+      Server state
+    """
     defstruct supervisor: nil, games: nil, game_state_supervisor: nil
   end
 

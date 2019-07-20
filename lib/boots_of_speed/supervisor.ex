@@ -1,4 +1,7 @@
 defmodule BootsOfSpeed.Supervisor do
+  @moduledoc """
+    Supervises the game server
+  """
   use Supervisor
 
   def start_link(arg) do

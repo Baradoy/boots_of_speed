@@ -1,4 +1,7 @@
 defmodule BootsOfSpeed.GameStateAgent do
+  @moduledoc """
+    Handles management of game state
+  """
   use Agent
 
   @type game_state :: %{round_stack: [round, ...]}
@@ -8,6 +11,9 @@ defmodule BootsOfSpeed.GameStateAgent do
   @type game_name :: String.t()
 
   defmodule State do
+    @moduledoc """
+      Game State
+    """
     @derive {Jason.Encoder, only: [:name, :round_stack]}
     defstruct name: "", round_stack: []
 

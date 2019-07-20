@@ -48,14 +48,14 @@ defmodule BootsOfSpeed.GameStateAgentTest do
     end
   end
 
-  # TODO describe "set_character_initiative/2" do
-  #   test "Sets a Characters Initiative", %{pid: pid} do
-  #     {:ok, _} = GameStateAgent.add_character("name", "image.png", "monster", pid)
-  #     {:ok, state} = GameStateAgent.set_character_initiative("name", 20, pid)
+  describe "set_character_initiative/2" do
+    test "Sets a Characters Initiative", %{pid: pid} do
+      {:ok, _} = GameStateAgent.add_character("name", "image.png", "monster", pid)
+      {:ok, state} = GameStateAgent.set_character_initiative("name", 20, pid)
 
-  #     assert current_round(state) == %{characters: %{"name" => %{image: "image.png", type: "monster", initiative: 20}}}
-  #   end
-  # end
+      assert current_round(state) == %{characters: %{"name" => %{image: "image.png", type: "monster", initiative: 20}}}
+    end
+  end
 
   describe "next_round/1" do
     test "next_round creates a new round", %{pid: pid} do
@@ -69,7 +69,7 @@ defmodule BootsOfSpeed.GameStateAgentTest do
       assert GameStateAgent.set_character_initiative("cragheart", 71, pid)
              |> get_cragheart() == %{image: "image", type: "player", initiative: 71}
 
-      assert GameStateAgent.next_round(pid) |> get_cragheart() == %{image: "image", type: "player"}
+      assert pid |> GameStateAgent.next_round() |> get_cragheart() == %{image: "image", type: "player"}
     end
   end
 
@@ -88,9 +88,9 @@ defmodule BootsOfSpeed.GameStateAgentTest do
       assert GameStateAgent.set_character_initiative("cragheart", 23, pid)
              |> get_cragheart() == %{image: "image", type: "player", initiative: 23}
 
-      assert GameStateAgent.next_round(pid) |> get_cragheart() == %{image: "image", type: "player"}
+      assert pid |> GameStateAgent.next_round() |> get_cragheart() == %{image: "image", type: "player"}
 
-      assert GameStateAgent.previous_round(pid) |> get_cragheart() == %{
+      assert pid |> GameStateAgent.previous_round() |> get_cragheart() == %{
                image: "image",
                type: "player",
                initiative: 23
