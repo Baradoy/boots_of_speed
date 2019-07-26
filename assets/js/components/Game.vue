@@ -1,5 +1,6 @@
 <template>
   <div v-if="gameState">
+    <h3>Game: {{ gameName }}</h3>
     <current-round v-bind:round="currentRound" v-on:set-initiative="setInitiative" />
     <manage-characters
       v-on:add="addCharacter"
@@ -54,10 +55,13 @@ export default {
       } = this;
 
       return objectToArray(characters);
+    },
+    gameName: function() {
+      return this.$route.params.id;
     }
   },
   mounted() {
-    console.log("Mounted");
+    console.log("Game Mounted");
     this.socket = new Socket("/socket", {
       params: { token: window.userToken }
     });

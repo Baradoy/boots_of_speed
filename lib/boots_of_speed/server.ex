@@ -20,6 +20,7 @@ defmodule BootsOfSpeed.Server do
   end
 
   # API
+
   def start_link([supervisor]) do
     GenServer.start_link(__MODULE__, supervisor, name: __MODULE__)
   end

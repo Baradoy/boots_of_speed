@@ -13,6 +13,12 @@ defmodule BootsOfSpeedWeb.Router do
     plug(:accepts, ["json"])
   end
 
+  scope "/api", BootsOfSpeedWeb do
+    pipe_through(:api)
+
+    post("/game", LobbyController, :create)
+  end
+
   scope "/", BootsOfSpeedWeb do
     pipe_through(:browser)
 

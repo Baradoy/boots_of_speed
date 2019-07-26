@@ -7,10 +7,6 @@ defmodule BootsOfSpeedWeb.GameChannel do
   alias BootsOfSpeed.Server
   alias BootsOfSpeed.GameStateAgent
 
-  def join("game:lobby", _message, socket) do
-    {:ok, "You joined!", socket}
-  end
-
   def join("game:" <> game_name, _params, socket) do
     game_name
     |> Server.fetch_game_state_server()

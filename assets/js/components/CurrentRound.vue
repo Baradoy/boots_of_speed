@@ -1,6 +1,6 @@
 <template>
   <div class="round-container">
-    <div class="round-header">Header</div>
+    <div class="round-header">Round #</div>
     <div class="round-body">
       <div class="round-players">
         <charcater
