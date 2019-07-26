@@ -4,7 +4,8 @@ defmodule BootsOfSpeedWeb.GameChannel do
   """
 
   use Phoenix.Channel
-  alias BootsOfSpeed.GameServer
+  alias BootsOfSpeed.Server
+  alias BootsOfSpeed.GameStateAgent
 
   def join("game:lobby", _message, socket) do
     {:ok, "You joined!", socket}
@@ -12,50 +13,53 @@ defmodule BootsOfSpeedWeb.GameChannel do
 
   def join("game:" <> game_name, _params, socket) do
     game_name
-    |> GameServer.get_game()
+    |> Server.fetch_game_state_server()
     |> case do
-      %{} ->
-        assign(socket, :game_name, game_name)
+      {:ok, game_state_agent} ->
+        socket = assign(socket, :game_state_agent, game_state_agent)
+
         {:ok, "Joined #{game_name}!", socket}
 
       _ ->
-        {:error, %{reason: "unauthorized"}}
+        {:error, %{message: "No such game!"}}
     end
   end
 
   def handle_in(
         "get_state",
         _,
-        %{topic: "game:" <> game_name} = socket
+        %{topic: "game:" <> _game_name, assigns: %{game_state_agent: game_state_agent}} = socket
       ) do
-    game = GameServer.get_game(game_name)
-    broadcast!(socket, "state", game)
+    {:ok, game_state} = GameStateAgent.get_state(game_state_agent)
+
+    broadcast!(socket, "state", game_state)
     {:noreply, socket}
   end
 
   def handle_in(
         "add_character",
         %{"name" => character_name, "image" => image, "type" => type},
-        %{topic: "game:" <> game_name} = socket
+        %{topic: "game:" <> _game_name, assigns: %{game_state_agent: game_state_agent}} = socket
       ) do
-    game =
-      GameServer.add_character(game_name, %{
-        character_name: character_name,
-        image: image,
-        type: type
-      })
+    {:ok, game_state} =
+      GameStateAgent.add_character(
+        character_name,
+        image,
+        type,
+        game_state_agent
+      )
 
-    broadcast!(socket, "state", game)
+    broadcast!(socket, "state", game_state)
     {:noreply, socket}
   end
 
   def handle_in(
         "remove_character",
         %{"name" => character_name},
-        %{topic: "game:" <> game_name} = socket
+        %{topic: "game:" <> _game_name, assigns: %{game_state_agent: game_state_agent}} = socket
       ) do
-    game = GameServer.remove_character(game_name, character_name)
-    broadcast!(socket, "state", game)
+    {:ok, game_state} = GameStateAgent.remove_character(character_name, game_state_agent)
+    broadcast!(socket, "state", game_state)
     {:noreply, socket}
   end
 
@@ -63,43 +67,40 @@ defmodule BootsOfSpeedWeb.GameChannel do
         "set_character_initiative",
         %{
           "name" => character_name,
-          "image" => image,
-          "type" => type,
           "initiative" => initiative
         },
-        %{topic: "game:" <> game_name} = socket
+        %{topic: "game:" <> _game_name, assigns: %{game_state_agent: game_state_agent}} = socket
       ) do
-    game =
-      GameServer.set_character_initiative(game_name, %{
-        character_name: character_name,
-        image: image,
-        type: type,
-        initiative: initiative
-      })
+    {:ok, game_state} =
+      GameStateAgent.set_character_initiative(
+        character_name,
+        initiative,
+        game_state_agent
+      )
 
-    broadcast!(socket, "state", game)
+    broadcast!(socket, "state", game_state)
     {:noreply, socket}
   end
 
   def handle_in(
         "next_round",
         _,
-        %{topic: "game:" <> game_name} = socket
+        %{topic: "game:" <> _game_name, assigns: %{game_state_agent: game_state_agent}} = socket
       ) do
-    game = GameServer.next_round(game_name)
+    {:ok, game_state} = GameStateAgent.next_round(game_state_agent)
 
-    broadcast!(socket, "state", game)
+    broadcast!(socket, "state", game_state)
     {:noreply, socket}
   end
 
   def handle_in(
         "previous_round",
         _,
-        %{topic: "game:" <> game_name} = socket
+        %{topic: "game:" <> _game_name, assigns: %{game_state_agent: game_state_agent}} = socket
       ) do
-    game = GameServer.previous_round(game_name)
+    {:ok, game_state} = GameStateAgent.previous_round(game_state_agent)
 
-    broadcast!(socket, "state", game)
+    broadcast!(socket, "state", game_state)
     {:noreply, socket}
   end
 
